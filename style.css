@@ -1,0 +1,36 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+input, select, button {
+    padding: 8px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+}
+button {
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+button:hover {
+    background-color: #45a049;
+}
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.error {
+    color: red;
+    font-size: 16px;
+}
