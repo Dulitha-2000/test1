@@ -41,7 +41,7 @@ function toggleInputs() {
 
 function calculate() {
     const calculationType = document.getElementById('calculationType').value;
-    const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+    const loanAmount = parseInt(document.getElementById('loanAmount').value);
     const loanTermYears = parseInt(document.getElementById('loanTermYears').value);
     const loanTermMonths = parseInt(document.getElementById('loanTermMonths').value);
     const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
@@ -69,7 +69,9 @@ function calculate() {
         }
         const monthlyRate = Math.pow(1 + interestRate, 1 / 12) - 1;
         const amount = (monthlyPayment * (1 - Math.pow(1 + monthlyRate, -totalMonths))) / monthlyRate;
-        resultDiv.innerHTML = `The loan amount is: $${amount.toFixed(2)}`;
+
+        const roundedAmount = Math.round(amount); // Use Math.floor() or Math.ceil() as per your requirement
+        resultDiv.innerHTML = `The loan amount is: $${roundedAmount}`;
     } else if (calculationType === 'interestRate') {
         if (isNaN(loanAmount) || isNaN(monthlyPayment) || isNaN(totalMonths)) {
             errorDiv.innerHTML = 'Please enter all required values.';
