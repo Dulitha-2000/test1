@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,30 +10,40 @@
     <h1>Loan Calculator</h1>
     <div>
         <div class="form-group">
-            <label for="loanAmount">Loan Amount:</label>
-            <input type="number" id="loanAmount" placeholder="Enter loan amount" required>
-        </div>
-
-        <div class="form-group">
-            <label for="loanTermYears">Loan Term (Years):</label>
-            <input type="number" id="loanTermYears" placeholder="Enter loan term in years" required>
-        </div>
-
-        <div class="form-group">
-            <label for="loanTermMonths">Loan Term (Months):</label>
-            <input type="number" id="loanTermMonths" placeholder="Enter loan term in months" required>
-        </div>
-
-        <div class="form-group">
-            <label for="interestRate">Interest Rate (%):</label>
-            <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate" required>
-        </div>
-
-        <div class="form-group">
-            <label for="compound">Compound:</label>
-            <select id="compound">
-                <option value="Monthly">Monthly (APR)</option>
+            <label for="calculationType">What do you want to calculate?</label>
+            <select id="calculationType">
+                <option value="monthlyPayment">Monthly Payment</option>
+                <option value="loanAmount">Loan Amount</option>
+                <option value="interestRate">Interest Rate</option>
+                <option value="loanTerm">Loan Term (Years)</option>
             </select>
+        </div>
+
+        <div id="inputFields">
+            <div class="form-group">
+                <label for="loanAmount">Loan Amount:</label>
+                <input type="number" id="loanAmount" placeholder="Enter loan amount">
+            </div>
+
+            <div class="form-group">
+                <label for="loanTermYears">Loan Term (Years):</label>
+                <input type="number" id="loanTermYears" placeholder="Enter loan term in years">
+            </div>
+
+            <div class="form-group">
+                <label for="loanTermMonths">Loan Term (Months):</label>
+                <input type="number" id="loanTermMonths" placeholder="Enter loan term in months">
+            </div>
+
+            <div class="form-group">
+                <label for="interestRate">Interest Rate (%):</label>
+                <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate">
+            </div>
+
+            <div class="form-group">
+                <label for="monthlyPayment">Monthly Payment:</label>
+                <input type="number" id="monthlyPayment" step="0.01" placeholder="Enter monthly payment">
+            </div>
         </div>
 
         <button id="calculateButton">Calculate</button>
