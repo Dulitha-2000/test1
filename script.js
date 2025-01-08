@@ -61,6 +61,7 @@ function calculate() {
     }
 
     const totalCompoundings = (loanTermYears + loanTermMonths / 12) * compoundFrequency;  //n*t(n:-compoundFrequency,t:-years)
+    
 
     if (calculationType === 'monthlyPayment') {
         if (!Number.isFinite(loanAmount) || loanAmount <= 0 || isNaN(totalCompoundings) || isNaN(interestRate)) {
@@ -68,7 +69,11 @@ function calculate() {
             return;
         }
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
-        const payment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
+
+        //final baloon payment
+        const fbp = finalBaloonpayment*(Math.pow(1+rateForCompoundPeriod,-totalCompoundings));
+        const payment = ((loanAmount-fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
+        //const payment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
         resultDiv.innerHTML = `Your monthly payment is: $${payment.toFixed(2)}`;
     } else if (calculationType === 'loanAmount') {
         if (isNaN(monthlyPayment) || isNaN(totalCompoundings) || isNaN(interestRate)) {
@@ -76,7 +81,9 @@ function calculate() {
             return;
         }
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
-        const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings))) / rateForCompoundPeriod;
+        const fbp = finalBaloonpayment*(Math.pow(1+rateForCompoundPeriod,-totalCompoundings));
+        const amount = ((monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings)))/ rateForCompoundPeriod)+fbp;
+       //const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings))) / rateForCompoundPeriod;
         resultDiv.innerHTML = `The loan amount is: $${Math.round(amount)}`;
     } else if (calculationType === 'interestRate') {
         if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(totalCompoundings)) {
