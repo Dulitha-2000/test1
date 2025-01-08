@@ -25,24 +25,41 @@
                 <input type="number" id="loanAmount" placeholder="Enter loan amount">
             </div>
 
-            <div class="form-group">
-                <label for="loanTermYears">Loan Term (Years):</label>
-                <input type="number" id="loanTermYears" placeholder="Enter loan term in years">
-            </div>
-
-            <div class="form-group">
-                <label for="loanTermMonths">Loan Term (Months):</label>
-                <input type="number" id="loanTermMonths" placeholder="Enter loan term in months">
-            </div>
+    
+            <div  style="display: flex; gap: 10px; align-items: center;">
+                <div class="form-group">
+                  <label for="loanTermYears">Years</label>
+                  <input type="number" id="loanTermYears" name="loanTermYears" />
+                </div>
+                <div class="form-group">
+                  <label for="loanTermMonths">Months</label>
+                  <input type="number" id="loanTermMonths" name="loanTermMonths" />
+                </div>
+              </div>
 
             <div class="form-group">
                 <label for="interestRate">Interest Rate (%):</label>
                 <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate">
             </div>
+            <div class="form-group">
+                <label for="compound">Compound:</label>
+                <select id="compound">
+                    <option value="Annual">annualy (APR)</option>
+                    <option value="Monthly">Monthly (APR)</option>
+                    <option value="Semimonthly">byweekly (APR)</option>
+                    <option value="Biweekly">semimonth (APR)</option>
+                    <option value="weekly">weekly (APR)</option>
+                    <option value="daily">daily (APR)</option>
+                </select>
+            </div>
 
             <div class="form-group">
-                <label for="monthlyPayment">Monthly Payment:</label>
+                <label for="monthlyPayment">Payment:</label>
                 <input type="number" id="monthlyPayment" step="0.01" placeholder="Enter monthly payment">
+            </div>
+            <div class="form-group">
+                <label for="finalBaloonpayment">Final Baloon payment:</label>
+                <input type="number" id="finalBaloonpayment" step="0.01" placeholder="Enter final Baloon payment">
             </div>
         </div>
 

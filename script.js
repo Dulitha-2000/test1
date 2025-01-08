@@ -2,111 +2,120 @@ document.getElementById('calculateButton').addEventListener('click', calculate);
 document.getElementById('clearButton').addEventListener('click', clearForm);
 document.getElementById('calculationType').addEventListener('change', toggleInputs);
 
-// Set the default calculation type to "monthlyPayment" when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('calculationType').value = 'monthlyPayment';
-    toggleInputs(); // Call toggleInputs to display only relevant fields
+    toggleInputs();
 });
 
 function toggleInputs() {
     const calculationType = document.getElementById('calculationType').value;
 
-    // Hide all input fields initially
     document.querySelectorAll('#inputFields .form-group').forEach(input => {
         input.style.display = 'none';
     });
 
-    // Show relevant input fields based on the calculation type
     if (calculationType === 'monthlyPayment') {
-        document.getElementById('loanAmount').parentElement.style.display = 'block';
-        document.getElementById('loanTermYears').parentElement.style.display = 'block';
-        document.getElementById('loanTermMonths').parentElement.style.display = 'block';
-        document.getElementById('interestRate').parentElement.style.display = 'block';
+        ['loanAmount', 'loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment','compound'].forEach(id => {
+            document.getElementById(id).parentElement.style.display = 'block';
+        });
     } else if (calculationType === 'loanAmount') {
-        document.getElementById('monthlyPayment').parentElement.style.display = 'block';
-        document.getElementById('loanTermYears').parentElement.style.display = 'block';
-        document.getElementById('loanTermMonths').parentElement.style.display = 'block';
-        document.getElementById('interestRate').parentElement.style.display = 'block';
+        ['monthlyPayment', 'loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment','compound'].forEach(id => {
+            document.getElementById(id).parentElement.style.display = 'block';
+        });
     } else if (calculationType === 'interestRate') {
-        document.getElementById('loanAmount').parentElement.style.display = 'block';
-        document.getElementById('monthlyPayment').parentElement.style.display = 'block';
-        document.getElementById('loanTermYears').parentElement.style.display = 'block';
-        document.getElementById('loanTermMonths').parentElement.style.display = 'block';
+        ['loanAmount', 'monthlyPayment', 'loanTermYears', 'loanTermMonths', 'finalBaloonpayment','compound'].forEach(id => {
+            document.getElementById(id).parentElement.style.display = 'block';
+        });
     } else if (calculationType === 'loanTerm') {
-        document.getElementById('loanAmount').parentElement.style.display = 'block';
-        document.getElementById('monthlyPayment').parentElement.style.display = 'block';
-        document.getElementById('interestRate').parentElement.style.display = 'block';
+        ['loanAmount', 'monthlyPayment', 'interestRate', 'finalBaloonpayment', 'compound'].forEach(id => {
+            document.getElementById(id).parentElement.style.display = 'block';
+        });
     }
 }
 
 function calculate() {
     const calculationType = document.getElementById('calculationType').value;
-    const loanAmount = parseInt(document.getElementById('loanAmount').value);
-    const loanTermYears = parseInt(document.getElementById('loanTermYears').value);
-    const loanTermMonths = parseInt(document.getElementById('loanTermMonths').value);
+    const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+    const loanTermYears = parseInt(document.getElementById('loanTermYears').value) || 0;
+    const loanTermMonths = parseInt(document.getElementById('loanTermMonths').value) || 0;
     const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
     const monthlyPayment = parseFloat(document.getElementById('monthlyPayment').value);
+    const compound = document.getElementById('compound').value;
+    const finalBaloonpayment= parseInt(document.getElementById('finalBaloonpayment').value);
 
     const resultDiv = document.getElementById('result');
     const errorDiv = document.getElementById('error');
     resultDiv.innerHTML = '';
     errorDiv.innerHTML = '';
 
-    const totalMonths = (loanTermYears * 12) + loanTermMonths;
+    let compoundFrequency;
+    if (compound === 'Annual') compoundFrequency = 1;
+    else if (compound === 'Monthly') compoundFrequency = 12;
+    else if (compound === 'Semimonthly') compoundFrequency = 24;
+    else if (compound === 'Biweekly') compoundFrequency = 26;
+    else if (compound === 'weekly') compoundFrequency = 52;
+    else if (compound === 'daily') compoundFrequency = 365;
+    else {
+        errorDiv.innerHTML = 'Invalid compounding frequency.';
+        return;
+    }
+
+    const totalCompoundings = (loanTermYears + loanTermMonths / 12) * compoundFrequency;  //n*t(n:-compoundFrequency,t:-years)
 
     if (calculationType === 'monthlyPayment') {
-        if (isNaN(loanAmount) || isNaN(totalMonths) || isNaN(interestRate)) {
-            errorDiv.innerHTML = 'Please enter all required values.';
+        if (!Number.isFinite(loanAmount) || loanAmount <= 0 || isNaN(totalCompoundings) || isNaN(interestRate)) {
+            errorDiv.innerHTML = 'Please enter valid values.';
             return;
         }
-        const monthlyRate = Math.pow(1 + interestRate, 1 / 12) - 1;
-        const payment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
+        const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
+        const payment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
         resultDiv.innerHTML = `Your monthly payment is: $${payment.toFixed(2)}`;
     } else if (calculationType === 'loanAmount') {
-        if (isNaN(monthlyPayment) || isNaN(totalMonths) || isNaN(interestRate)) {
-            errorDiv.innerHTML = 'Please enter all required values.';
+        if (isNaN(monthlyPayment) || isNaN(totalCompoundings) || isNaN(interestRate)) {
+            errorDiv.innerHTML = 'Please enter valid values.';
             return;
         }
-        const monthlyRate = Math.pow(1 + interestRate, 1 / 12) - 1;
-        const amount = (monthlyPayment * (1 - Math.pow(1 + monthlyRate, -totalMonths))) / monthlyRate;
-
-        const roundedAmount = Math.round(amount); // Use Math.floor() or Math.ceil() as per your requirement
-        resultDiv.innerHTML = `The loan amount is: $${roundedAmount}`;
+        const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
+        const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings))) / rateForCompoundPeriod;
+        resultDiv.innerHTML = `The loan amount is: $${Math.round(amount)}`;
     } else if (calculationType === 'interestRate') {
-        if (isNaN(loanAmount) || isNaN(monthlyPayment) || isNaN(totalMonths)) {
-            errorDiv.innerHTML = 'Please enter all required values.';
+        if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(totalCompoundings)) {
+            errorDiv.innerHTML = 'Please enter valid values.';
             return;
         }
+
         let low = 0;
         let high = 1;
-        let rate = 0;
         const tolerance = 1e-6;
 
         while (high - low > tolerance) {
-            rate = (low + high) / 2;
-            const monthlyRate = rate / 12;
-            const calculatedPayment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
-
-            if (calculatedPayment > monthlyPayment) {
-                high = rate;
+            const mid = (low + high) / 2;
+            const rateForCompoundPeriod = Math.pow(1 + mid, 1 / compoundFrequency) - 1;
+            const estimatedPayment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
+            if (estimatedPayment > monthlyPayment) {
+                high = mid;
             } else {
-                low = rate;
+                low = mid;
             }
         }
 
-        const aeir = Math.pow(1 + rate / 12, 12) - 1;
-
-        resultDiv.innerHTML = `The Annual Effective Interest Rate (AEIR) is: ${(aeir * 100).toFixed(2)}%`;
+        const annualRate = low * 100;
+        resultDiv.innerHTML = `The interest rate is: ${annualRate.toFixed(6)}%`;
     } else if (calculationType === 'loanTerm') {
-        if (isNaN(loanAmount) || isNaN(monthlyPayment) || isNaN(interestRate)) {
-            errorDiv.innerHTML = 'Please enter all required values.';
+        if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(interestRate)) {
+            errorDiv.innerHTML = 'Please enter valid values.';
             return;
         }
-        const monthlyRate = Math.pow(1 + interestRate, 1 / 12) - 1;
-        const term = Math.log(monthlyPayment / (monthlyPayment - loanAmount * monthlyRate)) / Math.log(1 + monthlyRate);
-        resultDiv.innerHTML = `The loan term is: ${Math.floor(term / 12)} years and ${Math.round(term % 12)} months.`;
+
+        const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
+        const totalCompoundings = Math.log(monthlyPayment / (monthlyPayment - loanAmount * rateForCompoundPeriod)) / Math.log(1 + rateForCompoundPeriod);
+        const years = Math.floor(totalCompoundings / compoundFrequency);
+        const months = Math.round((totalCompoundings % compoundFrequency) * 12 / compoundFrequency);
+
+        resultDiv.innerHTML = `The loan term is: ${years} years and ${months} months`;
     }
 }
+
 
 function clearForm() {
     document.querySelectorAll('#inputFields input').forEach(input => input.value = '');
