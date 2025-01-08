@@ -75,7 +75,7 @@ function calculate() {
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
         const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
         const payment = ((loanAmount - fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
-        resultDiv.innerHTML = `Your monthly payment is: $${payment.toFixed(2)}`;
+        resultDiv.innerHTML = `Your payment is: $${payment.toFixed(2)}`;
     } else if (calculationType === 'loanAmount') {
         if (isNaN(monthlyPayment) || isNaN(totalCompoundings) || isNaN(interestRate)) {
             errorDiv.innerHTML = 'Please enter valid values.';
