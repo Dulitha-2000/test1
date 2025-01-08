@@ -34,3 +34,7 @@ button:hover {
     color: red;
     font-size: 16px;
 }
+#aprDisplay{
+    color: red;
+    font-size: small;
+}

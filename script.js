@@ -15,19 +15,19 @@ function toggleInputs() {
     });
 
     if (calculationType === 'monthlyPayment') {
-        ['loanAmount', 'loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment','compound'].forEach(id => {
+        ['compound', 'loanAmount','loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment'].forEach(id => {
             document.getElementById(id).parentElement.style.display = 'block';
         });
     } else if (calculationType === 'loanAmount') {
-        ['monthlyPayment', 'loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment','compound'].forEach(id => {
+        ['compound','monthlyPayment', 'loanTermYears', 'loanTermMonths', 'interestRate', 'finalBaloonpayment'].forEach(id => {
             document.getElementById(id).parentElement.style.display = 'block';
         });
     } else if (calculationType === 'interestRate') {
-        ['loanAmount', 'monthlyPayment', 'loanTermYears', 'loanTermMonths', 'finalBaloonpayment','compound'].forEach(id => {
+        ['compound','loanAmount', 'monthlyPayment', 'loanTermYears', 'loanTermMonths', 'finalBaloonpayment'].forEach(id => {
             document.getElementById(id).parentElement.style.display = 'block';
         });
     } else if (calculationType === 'loanTerm') {
-        ['loanAmount', 'monthlyPayment', 'interestRate', 'finalBaloonpayment', 'compound'].forEach(id => {
+        [ 'compound', 'loanAmount', 'monthlyPayment', 'interestRate', 'finalBaloonpayment'].forEach(id => {
             document.getElementById(id).parentElement.style.display = 'block';
         });
     }
@@ -41,7 +41,7 @@ function calculate() {
     const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
     const monthlyPayment = parseFloat(document.getElementById('monthlyPayment').value);
     const compound = document.getElementById('compound').value;
-    const finalBaloonpayment= parseInt(document.getElementById('finalBaloonpayment').value);
+    const finalBaloonpayment = parseInt(document.getElementById('finalBaloonpayment').value) || 0;
 
     const resultDiv = document.getElementById('result');
     const errorDiv = document.getElementById('error');
@@ -60,8 +60,12 @@ function calculate() {
         return;
     }
 
-    const totalCompoundings = (loanTermYears + loanTermMonths / 12) * compoundFrequency;  //n*t(n:-compoundFrequency,t:-years)
-    
+    const totalCompoundings = (loanTermYears + loanTermMonths / 12) * compoundFrequency;
+    if (interestRate > 0) {
+        const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
+        const apr = (rateForCompoundPeriod * compoundFrequency) * 100;
+        aprDisplay.innerHTML = `APR (Annual Percentage Rate): ${apr.toFixed(2)}%`;
+    }
 
     if (calculationType === 'monthlyPayment') {
         if (!Number.isFinite(loanAmount) || loanAmount <= 0 || isNaN(totalCompoundings) || isNaN(interestRate)) {
@@ -69,11 +73,8 @@ function calculate() {
             return;
         }
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
-
-        //final baloon payment
-        const fbp = finalBaloonpayment*(Math.pow(1+rateForCompoundPeriod,-totalCompoundings));
-        const payment = ((loanAmount-fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
-        //const payment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
+        const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
+        const payment = ((loanAmount - fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
         resultDiv.innerHTML = `Your monthly payment is: $${payment.toFixed(2)}`;
     } else if (calculationType === 'loanAmount') {
         if (isNaN(monthlyPayment) || isNaN(totalCompoundings) || isNaN(interestRate)) {
@@ -81,9 +82,8 @@ function calculate() {
             return;
         }
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
-        const fbp = finalBaloonpayment*(Math.pow(1+rateForCompoundPeriod,-totalCompoundings));
-        const amount = ((monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings)))/ rateForCompoundPeriod)+fbp;
-       //const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings))) / rateForCompoundPeriod;
+        const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
+        const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings)) / rateForCompoundPeriod) + fbp;
         resultDiv.innerHTML = `The loan amount is: $${Math.round(amount)}`;
     } else if (calculationType === 'interestRate') {
         if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(totalCompoundings)) {
@@ -98,7 +98,8 @@ function calculate() {
         while (high - low > tolerance) {
             const mid = (low + high) / 2;
             const rateForCompoundPeriod = Math.pow(1 + mid, 1 / compoundFrequency) - 1;
-            const estimatedPayment = (loanAmount * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
+            const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
+            const estimatedPayment = ((loanAmount - fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
             if (estimatedPayment > monthlyPayment) {
                 high = mid;
             } else {
@@ -115,9 +116,10 @@ function calculate() {
         }
 
         const rateForCompoundPeriod = Math.pow(1 + interestRate, 1 / compoundFrequency) - 1;
-        const totalCompoundings = Math.log(monthlyPayment / (monthlyPayment - loanAmount * rateForCompoundPeriod)) / Math.log(1 + rateForCompoundPeriod);
-        const years = Math.floor(totalCompoundings / compoundFrequency);
-        const months = Math.round((totalCompoundings % compoundFrequency) * 12 / compoundFrequency);
+        const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
+        const totalCompoundingsAdjusted = Math.log(monthlyPayment / (monthlyPayment - (loanAmount - fbp) * rateForCompoundPeriod)) / Math.log(1 + rateForCompoundPeriod);
+        const years = Math.floor(totalCompoundingsAdjusted / compoundFrequency);
+        const months = Math.round((totalCompoundingsAdjusted % compoundFrequency) * 12 / compoundFrequency);
 
         resultDiv.innerHTML = `The loan term is: ${years} years and ${months} months`;
     }

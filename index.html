@@ -18,7 +18,17 @@
                 <option value="loanTerm">Loan Term (Years)</option>
             </select>
         </div>
-
+        <div class="form-group">
+            <label for="compound">Compound:</label>
+            <select id="compound">
+                <option value="Annual">annualy (APR)</option>
+                <option value="Monthly">Monthly (APR)</option>
+                <option value="Semimonthly">byweekly (APR)</option>
+                <option value="Biweekly">semimonth (APR)</option>
+                <option value="weekly">weekly (APR)</option>
+                <option value="daily">daily (APR)</option>
+            </select>
+        </div>
         <div id="inputFields">
             <div class="form-group">
                 <label for="loanAmount">Loan Amount:</label>
@@ -40,18 +50,9 @@
             <div class="form-group">
                 <label for="interestRate">Interest Rate (%):</label>
                 <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate">
+                <div id="aprDisplay"></div> <!-- Placeholder for APR -->
             </div>
-            <div class="form-group">
-                <label for="compound">Compound:</label>
-                <select id="compound">
-                    <option value="Annual">annualy (APR)</option>
-                    <option value="Monthly">Monthly (APR)</option>
-                    <option value="Semimonthly">byweekly (APR)</option>
-                    <option value="Biweekly">semimonth (APR)</option>
-                    <option value="weekly">weekly (APR)</option>
-                    <option value="daily">daily (APR)</option>
-                </select>
-            </div>
+            
 
             <div class="form-group">
                 <label for="monthlyPayment">Payment:</label>
