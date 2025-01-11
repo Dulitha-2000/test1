@@ -38,3 +38,41 @@ button:hover {
     color: red;
     font-size: small;
 }
+.table-container {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+  }
+  
+  .loan-breakdown {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .loan-breakdown thead tr {
+    position: sticky;
+    top: 0;
+    background-color: #004aad; /* Blue header */
+    color: #fff;
+  }
+  
+  .loan-breakdown th,
+  .loan-breakdown td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .loan-breakdown tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .loan-breakdown tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  .loan-breakdown tbody tr:hover {
+    background-color: #e8f4fd;
+  }
+  

@@ -42,8 +42,8 @@
                   <input type="number" id="loanTermYears" name="loanTermYears" />
                 </div>
                 <div class="form-group">
-                  <label for="loanTermMonths">Months</label>
-                  <input type="number" id="loanTermMonths" name="loanTermMonths" />
+                  <label for="totCompoundings">Months</label>
+                  <input type="number" id="totCompoundings" name="totCompoundings" />
                 </div>
               </div>
 
@@ -70,6 +70,25 @@
         <div id="result" class="result"></div>
         <div id="error" class="error"></div>
     </div>
+
+    <div class="table-container">
+        <table class="loan-breakdown">
+          <thead>
+            <tr>
+              <th>Months</th>
+              <th>Start Balance</th>
+              <th>Interest</th>
+              <th>Principle Amount</th>
+              <th>Total Installment</th>
+              <th>End Balance</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamic rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>      
 
     <script src="script.js"></script>
 </body>
