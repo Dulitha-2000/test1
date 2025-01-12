@@ -5,6 +5,8 @@ document.getElementById('calculationType').addEventListener('change', toggleInpu
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('calculationType').value = 'monthlyPayment';
     toggleInputs();
+    document.querySelector('.table-container').style.display = 'none'; // Hide the table on load
+
 });
 
 function toggleInputs() {
@@ -76,6 +78,7 @@ function calculate() {
         const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
         const payment = ((loanAmount - fbp) * rateForCompoundPeriod) / (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings));
         resultDiv.innerHTML = `Your payment is: $${payment.toFixed(2)}`;
+        document.querySelector('.table-container').style.display = 'block'; // Show the table
         generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,payment,finalBaloonpayment); 
 
     } else if (calculationType === 'loanAmount') {
@@ -87,6 +90,7 @@ function calculate() {
         const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
         const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings)) / rateForCompoundPeriod) + fbp;
         resultDiv.innerHTML = `The loan amount is: $${Math.round(amount)}`;
+        document.querySelector('.table-container').style.display = 'block'; // Show the table
         generateLoanBreakdown(amount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment); 
 
     } else if (calculationType === 'interestRate') {
@@ -113,6 +117,7 @@ function calculate() {
 
         const annualRate = low * 100;
         resultDiv.innerHTML = `The interest rate is: ${annualRate.toFixed(6)}%`;
+        document.querySelector('.table-container').style.display = 'block'; // Show the table
         generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment);
     } else if (calculationType === 'loanTerm') {
         if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(interestRate)) {
@@ -127,6 +132,7 @@ function calculate() {
         const months = Math.round((totalCompoundingsAdjusted % compoundFrequency) * 12 / compoundFrequency);
 
         resultDiv.innerHTML = `The loan term is: ${years} years and ${months} months`;
+        document.querySelector('.table-container').style.display = 'block'; // Show the table
         generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment);
     }
     
@@ -137,6 +143,7 @@ function clearForm() {
     document.querySelectorAll('#inputFields input').forEach(input => input.value = '');
     document.getElementById('result').innerHTML = '';
     document.getElementById('error').innerHTML = '';
+    document.querySelector('.table-container').style.display = 'none'; // Hide the table
 }
 
 function generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,payment,finalBaloonpayment) {
