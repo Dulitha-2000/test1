@@ -3,76 +3,91 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
 }
+
 .form-group {
     margin-bottom: 15px;
 }
+
 label {
     display: block;
     margin-bottom: 5px;
 }
+
 input, select, button {
     padding: 8px;
     width: 100%;
     max-width: 300px;
     margin-bottom: 10px;
 }
+
 button {
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
     border: none;
 }
+
 button:hover {
     background-color: #45a049;
 }
+
 .result {
     margin-top: 20px;
     font-size: 18px;
     font-weight: bold;
 }
+
 .error {
     color: red;
     font-size: 16px;
 }
-#aprDisplay{
+
+#aprDisplay {
     color: red;
     font-size: small;
 }
+
+/* Adjust table-container for top-right positioning */
 .table-container {
-    max-height: 400px; /* Adjust as needed */
-    overflow-y: scroll;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-  }
-  
-  .loan-breakdown {
+    position: absolute; /* Position relative to the entire page */
+    top: 20px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    width: 65%; /* Adjust width as needed */
+    max-height: 400px; /* Allow scrolling if content exceeds height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ddd; /* Add a border */
+    background-color: #fff; /* Ensure table background is visible */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Loan breakdown table styling */
+.loan-breakdown {
     width: 100%;
     border-collapse: collapse;
-  }
-  
-  .loan-breakdown thead tr {
-    position: sticky;
+}
+
+.loan-breakdown thead tr {
+    position: sticky; /* Keep header sticky during scrolling */
     top: 0;
     background-color: #004aad; /* Blue header */
     color: #fff;
-  }
-  
-  .loan-breakdown th,
-  .loan-breakdown td {
+}
+
+.loan-breakdown th,
+.loan-breakdown td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-  }
-  
-  .loan-breakdown tbody tr:nth-child(even) {
+}
+
+.loan-breakdown tbody tr:nth-child(even) {
     background-color: #f9f9f9;
-  }
-  
-  .loan-breakdown tbody tr:nth-child(odd) {
+}
+
+.loan-breakdown tbody tr:nth-child(odd) {
     background-color: #ffffff;
-  }
-  
-  .loan-breakdown tbody tr:hover {
+}
+
+.loan-breakdown tbody tr:hover {
     background-color: #e8f4fd;
-  }
-  
+}

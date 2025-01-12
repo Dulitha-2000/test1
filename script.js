@@ -87,6 +87,8 @@ function calculate() {
         const fbp = finalBaloonpayment * Math.pow(1 + rateForCompoundPeriod, -totalCompoundings);
         const amount = (monthlyPayment * (1 - Math.pow(1 + rateForCompoundPeriod, -totalCompoundings)) / rateForCompoundPeriod) + fbp;
         resultDiv.innerHTML = `The loan amount is: $${Math.round(amount)}`;
+        generateLoanBreakdown(amount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment); 
+
     } else if (calculationType === 'interestRate') {
         if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(totalCompoundings)) {
             errorDiv.innerHTML = 'Please enter valid values.';
@@ -111,6 +113,7 @@ function calculate() {
 
         const annualRate = low * 100;
         resultDiv.innerHTML = `The interest rate is: ${annualRate.toFixed(6)}%`;
+        generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment);
     } else if (calculationType === 'loanTerm') {
         if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(monthlyPayment) || isNaN(interestRate)) {
             errorDiv.innerHTML = 'Please enter valid values.';
@@ -124,6 +127,7 @@ function calculate() {
         const months = Math.round((totalCompoundingsAdjusted % compoundFrequency) * 12 / compoundFrequency);
 
         resultDiv.innerHTML = `The loan term is: ${years} years and ${months} months`;
+        generateLoanBreakdown(loanAmount, rateForCompoundPeriod ,totalCompoundings,monthlyPayment,finalBaloonpayment);
     }
     
 }
